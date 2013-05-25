@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<script src="jquery-1.9.1.min.js"></script>
+<script>
+safari.application.addEventListener("command", performCommand, false);
+safari.extension.settings.addEventListener("change", settingChanged, false);
+
+var timer = null;
+
+function settingChanged(event){
+	if (event.key == "updateTime") {
+		clearTimeout(timer);
+		getUnreadCount();
+	}
+}
+
+function performCommand(event) {
+    if (event.command == "open-commafeed") {
+		var newTab = safari.application.activeBrowserWindow.openTab();
+		newTab.url = "https://commafeed.com/";
+    }
+}
+
+function updateUnreadCount(data){
+	var i = data.entries.length;
+	safari.extension.toolbarItems[0].badge=i;
+}
+
+function getUnreadCount(){
+	$.ajax({
+		url: "https://www.commafeed.com/rest/category/entries?id=all&readType=unread",
+		dataType: "json",
+		success: updateUnreadCount
+	});
+	
+	timer = setTimeout(getUnreadCount,safari.extension.settings.updateTime);
+}
+
+
+getUnreadCount();
+</script>
