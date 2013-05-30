@@ -21,13 +21,16 @@ function performCommand(event) {
 }
 
 function updateUnreadCount(data){
-	var i = data.entries.length;
-	safari.extension.toolbarItems[0].badge=i;
+	var sum = 0;
+	for(var i=0;i<data.length;i++){
+		sum+=data[i].unreadCount;
+	}
+	safari.extension.toolbarItems[0].badge=sum;
 }
 
 function getUnreadCount(){
 	$.ajax({
-		url: "https://www.commafeed.com/rest/category/entries?id=all&readType=unread",
+		url: "https://www.commafeed.com/rest/category/unreadCount",
 		dataType: "json",
 		success: updateUnreadCount
 	});
