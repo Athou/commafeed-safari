@@ -18,10 +18,12 @@ function hasCommafeedOpen(){
 	for (var i=0;i<windows.length;i++){
 		var tabs = windows[i].tabs;
 		for (var j=0;j<tabs.length;j++){
-			if(tabs[j].url.indexOf("commafeed.com")!=-1){
-				windows[i].activate();
-				tabs[j].activate();
-				return true;
+			if (typeof tabs[j].url != 'undefined'){
+				if(tabs[j].url.indexOf("commafeed.com")!=-1){
+					windows[i].activate();
+					tabs[j].activate();
+					return true;
+				}
 			}
 		}
 	}
@@ -47,7 +49,11 @@ function updateUnreadCount(data){
 	for(var i=0;i<data.length;i++){
 		sum+=data[i].unreadCount;
 	}
-	safari.extension.toolbarItems[0].badge=sum;
+	var toolbarItems = safari.extension.toolbarItems;
+	for (var i=0;i<toolbarItems.length;i++){
+		if(toolbarItems[i] && toolbarItems[i].identifier=="commafeed")
+			toolbarItems[i].badge=sum;
+	}
 }
 
 function getUnreadCount(){
