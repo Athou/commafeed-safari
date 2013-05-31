@@ -13,11 +13,33 @@ function settingChanged(event){
 	}
 }
 
+function hasCommafeedOpen(){
+	var windows = safari.application.browserWindows;
+	for (var i=0;i<windows.length;i++){
+		var tabs = windows[i].tabs;
+		for (var j=0;j<tabs.length;j++){
+			if(tabs[j].url.indexOf("commafeed.com")!=-1){
+				windows[i].activate();
+				tabs[j].activate();
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 function performCommand(event) {
-    if (event.command == "open-commafeed") {
-		var newTab = safari.application.activeBrowserWindow.openTab();
-		newTab.url = "https://commafeed.com/";
-    }
+	if (event.command == "open-commafeed") {
+		if(!hasCommafeedOpen()){
+			if(safari.application.activeBrowserWindow.activeTab.url){
+				var newTab = safari.application.activeBrowserWindow.openTab();
+				newTab.url = "https://commafeed.com/";
+			}
+			else{
+				safari.application.activeBrowserWindow.activeTab.url="https://commafeed.com/";
+			}
+		}
+	}
 }
 
 function updateUnreadCount(data){
