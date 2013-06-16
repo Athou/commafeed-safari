@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <script src="jquery-1.9.1.min.js"></script>
 <script>
-safari.application.addEventListener("command", performCommand, false);
+safari.application.addEventListener("command", performCommand, true);
+safari.application.addEventListener("open", openHandler, true);
 safari.extension.settings.addEventListener("change", settingChanged, false);
 
 var timer = null;
@@ -28,6 +29,13 @@ function hasCommafeedOpen(){
 		}
 	}
 	return false;
+}
+
+function openHandler(event){
+	if (event.type == "open" && event.target == safari.application.activeBrowserWindow){
+		clearTimeout(timer);
+		getUnreadCount();
+	}
 }
 
 function performCommand(event) {
